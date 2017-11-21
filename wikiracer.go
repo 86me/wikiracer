@@ -9,6 +9,7 @@ import (
     "io/ioutil"
     "wikiracer/links"
     "time"
+    "net/http"
 )
 
 const (
@@ -229,3 +230,40 @@ func main() {
 
     fmt.Println("Elapsed time: ", time.Since(startTime))
 }
+
+/*
+func (wr *WikiRace) GetInfo(w http.ResponseWriter, r *http.Request) {
+    respondWithJSON(w, http.StatusOK, "INFO")
+}
+
+func (wr *WikiRace) RunRace(w http.ResponseWriter, r *http.Request) {
+    respondWithJSON(w, http.StatusOK, graph)
+}
+
+type WikiRace struct {
+    Router  *mux.Router
+    Graph   *PageGraph
+}
+
+func (wr *WikiRace) Run(addr string) {
+    log.Fatal(http.ListenAndServe(":8000", wr.Router))
+}
+
+func (wr *WikiRace) Initialize() {
+    wr.Router = mux.NewRouter()
+    wr.Router.HandleFunc("/", GetInfo).Methods("GET")
+    wr.Router.HandleFunc("/{term1}/{term2}", RunRace).Methods("GET")
+}
+
+func respondWithError(w http.ResponseWriter, code int, message string) {
+    respondWithJSON(w, code, map[string]string{"error": message})
+}
+
+func respondWithJSON(w http.ResponseWriter, code int, payload interface{}) {
+    response, _ := json.Marshal(payload)
+
+    w.Header().Set("Content-Type", "application/json")
+    w.WriteHeader(code)
+    w.Write(response)
+}
+*/

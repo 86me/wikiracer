@@ -9,6 +9,7 @@ import (
     "time"
     "strings"
     "log"
+    "regexp"
 )
 
 const (
@@ -22,27 +23,35 @@ var (
     client = &http.Client{ Timeout: 5 * time.Second }
 
     // Ignore uninteresting or "boring" term relationships
-    boring = map[string]bool{
+    boring = map[string]bool {
         "Biblioteca Nacional de España":                    true,
         "Bibliothèque nationale de France":                 true,
         "Digital object identifier":                        true,
         "Integrated Authority File":                        true,
-        "International Standard Book Number":               true,
-        "International Standard Name Identifier":           true,
         "LIBRIS":                                           true,
         "CNN":                                              true,
+        "Wayback Machine":                                  true,
         "Library of Congress Control Number":               true,
         "MusicBrainz":                                      true,
         "AllMusic":                                         true,
         "Billboard (magazine)":                             true,
         "List of Rock and Roll Hall of Fame inductees":     true,
         "National Diet Library":                            true,
-        "National Library of the Czech Republic":           true,
-        "PubMed Central":                                   true,
-        "PubMed Identifier":                                true,
         "Virtual International Authority File":             true,
     }
+
+    boring_regex = []string {
+        "^Category:Articles with unsourced.*$",
+        "^International Standard.*$",
+        "^National Library of.*$",
+        "^PubMed.*$",
+        "^DMOZ$",
+    }
+
+    boring_regex_pattern = `(` + strings.Join(boring_regex, "|") + `)`
+
 )
+
 
 // Returns the given slice as batches with a maximum size
 func batch(s []string, max int) [][]string {
@@ -101,9 +110,24 @@ func get(url string) ([]byte, error) {
 type Links map[string][]string
 
 func (pl Links) add(from, to string) {
+    // Check against boring titles and discard matches
     if boring[from] || boring[to] {
         return
     }
+
+    // Check against boring regular expressions and discard matches
+    r, _ := regexp.Compile(boring_regex_pattern)
+    if r.Match([]byte(from)) || r.Match([]byte(to)) {
+        return
+    }
+    /*
+    for _, regex := range boring_regex {
+        r, _ := regexp.Compile(regex)
+        if r.Match([]byte(from)) || r.Match([]byte(to)) {
+            return
+        }
+    }
+    */
 
     // The API can return pages that link to themselves. We should ignore them.
     if from == to {
