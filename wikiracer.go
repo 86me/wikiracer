@@ -53,7 +53,7 @@ func init() {
         if len(port) > 0 {
             wr.Serve(flag.Arg(0))
         } else {
-            wr.Serve(":8686")
+            wr.Serve(":8686") // default port
         }
     }
 
