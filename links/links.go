@@ -52,7 +52,6 @@ var (
 
 )
 
-
 // Returns the given slice as batches with a maximum size
 func batch(s []string, max int) [][]string {
     batches := [][]string{}
@@ -120,14 +119,6 @@ func (pl Links) add(from, to string) {
     if r.Match([]byte(from)) || r.Match([]byte(to)) {
         return
     }
-    /*
-    for _, regex := range boring_regex {
-        r, _ := regexp.Compile(regex)
-        if r.Match([]byte(from)) || r.Match([]byte(to)) {
-            return
-        }
-    }
-    */
 
     // The API can return pages that link to themselves. We should ignore them.
     if from == to {
