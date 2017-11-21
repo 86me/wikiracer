@@ -50,6 +50,7 @@ var (
 
     boring_regex = []string {
         "^Category:Articles with unsourced.*$",
+        "^Category:Redirects.*$",
         "^International Standard.*$",
         "^National Library of.*$",
         "^PubMed.*$",
@@ -62,11 +63,8 @@ var (
 
 type PageGraph struct {
     forward safeStringMap
-
     forwardQueue []string
-
     backward safeStringMap
-
     backwardQueue []string
 }
 
@@ -381,12 +379,6 @@ func (r *linksResponse) UnmarshalJSON(b []byte) error {
 // extractContinue takes as input a Wikipedia API query response and returns
 // the "continue" string. If no continue string is set, an empty string is
 // returned.
-//
-//   {
-//     "continue": {
-//       "{subkey}": "736|0|Action-angle_variables"
-//     }
-//   }
 func extractContinue(data map[string]interface{}, subkey string) string {
     if cont, ok := data["continue"]; ok {
         if contValue, ok := cont.(map[string]interface{})[subkey]; ok {
@@ -399,22 +391,6 @@ func extractContinue(data map[string]interface{}, subkey string) string {
 // extractLinks takes as input a Wikipedia API query response with either
 // "links" or "linkshere" properties enumerated for a set of pages and returns
 // a complete Links representation of that response.
-//
-//   {
-//     ...
-//     "query": {
-//       "pages": {
-//         "15580374": {
-//           "title": "Albert Einstein",
-//           "{subkey}":[
-//             { "title": "2dF Galaxy Redshift Survey" },
-//             ...
-//           ]
-//         },
-//         ...
-//       }
-//     }
-//   }
 func extractLinks(data map[string]interface{}, subkey string) Links {
     links := Links{}
 
