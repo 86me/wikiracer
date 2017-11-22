@@ -28,8 +28,8 @@ Elapsed time:  4.672853825s
 
 ## Building
 
-WikiRacer has no external dependencies. Just fetch and build with: `go get
-github.com/86me/wikiracer`
+The WikiRacer HTTP service depends on gorrilla/mux. Fetch and build with: 
+`go get github.com/gorilla/mux && go get github.com/86me/wikiracer`
 
 ## Running
 
@@ -44,7 +44,7 @@ usage: ./wikiracer [-debug] "from_title" "to_title"
         Run HTTP server
 ```
 
-Example:
+Examples:
 
 ```
 $ ./wikiracer "Ada Lovelace" "Robert Frost"
@@ -52,7 +52,10 @@ Ada Lovelace
 Artificial intelligence
 Dartmouth College
 Robert Frost
-Elapsed time:  3.033301067s
+Elapsed time:  1.517820434s
+
+$ ./wikiracer -serve 0.0.0.0:4040
+[WikiRacer] service running at  0.0.0.0:4040
 ```
 
 ## Limitations
