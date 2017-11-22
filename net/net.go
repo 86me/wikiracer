@@ -28,7 +28,7 @@ func (wr *WikiRace) Initialize() {
 }
 
 func (wr *WikiRace) Serve(addr string) {
-    fmt.Println("[WikiRace] service running at ", addr)
+    fmt.Println("[WikiRacer] service running at ", addr)
     log.Fatal(http.ListenAndServe(addr, wr.Router))
 }
 
