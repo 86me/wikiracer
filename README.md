@@ -13,7 +13,7 @@ Bible
 Système universitaire de documentation
 Bill Joy
 OpenBSD
-Elapsed time:  7.120570172s
+Elapsed time:  3.120570172s
 ./wikiracer Pleiades OpenBSD  0.49s user 0.04s system 7% cpu 7.132 total
 
 $ time ./wikiracer "Jim Beam" "King George"
@@ -22,7 +22,7 @@ Kentucky
 Letters patent
 George IV of the United Kingdom
 King George
-Elapsed time:  4.672853825s
+Elapsed time:  2.672853825s
 ./wikiracer "Jim Beam" "King George"  0.32s user 0.03s system 7% cpu 4.684 total
 ```
 
@@ -30,6 +30,11 @@ Elapsed time:  4.672853825s
 
 The WikiRacer HTTP service depends on gorrilla/mux. Fetch and build with: 
 `go get github.com/gorilla/mux && go get github.com/86me/wikiracer`
+`cd $GOPATH/src/github.com/86me/wikiracer && go build && ./wikiracer`
+
+## Testing
+Recursively run the tests with:
+`go test ./...`
 
 ## Running
 
