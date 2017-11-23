@@ -43,6 +43,7 @@ var (
         "BIBSYS",
         "LIBRIS",
         "^OCLC$",
+        "AllMusic",
         "[Aa]bout.com",
         "[Ii][Mm][Dd][Bb]",
         "Wayback Machine",
