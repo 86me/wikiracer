@@ -30,24 +30,6 @@ var (
     client = &http.Client{ Transport: tr, Timeout: 15 * time.Second }
 
     // Ignore uninteresting or "boring" term relationships
-    boring = map[string]bool {
-        "Biblioteca Nacional de España":                    true,
-        "Bibliothèque nationale de France":                 true,
-        "Digital object identifier":                        true,
-        "Integrated Authority File":                        true,
-        "LIBRIS":                                           true,
-        "CNN":                                              true,
-        "JSTOR":                                            true,
-        "Wayback Machine":                                  true,
-        "Library of Congress Control Number":               true,
-        "MusicBrainz":                                      true,
-        "AllMusic":                                         true,
-        "Billboard (magazine)":                             true,
-        "List of Rock and Roll Hall of Fame inductees":     true,
-        "National Diet Library":                            true,
-        "Virtual International Authority File":             true,
-    }
-
     boring_regex = []string {
         "^Category:Articles with unsourced.*$",
         "^Category:Redirects.*$",
@@ -55,6 +37,14 @@ var (
         "^National Library of.*$",
         "^PubMed.*$",
         "^DMOZ$",
+        "Integrated Authority File",
+        "CNN",
+        "JSTOR",
+        "Wayback Machine",
+        "National Diet Library",
+        "Library of Congress Control Number",
+        "Biblioteca Nacional de España",
+        "Bibliothèque nationale de France",
     }
 
     boring_regex_pattern = `(` + strings.Join(boring_regex, "|") + `)`
@@ -276,14 +266,9 @@ func get(url string) ([]byte, error) {
 type Links map[string][]string
 
 func (pl Links) add(from, to string) {
-    // Check against boring titles and discard matches
-    if boring[from] || boring[to] {
-        return
-    }
-
-    // Check against boring regular expressions and discard matches
-    r, _ := regexp.Compile(boring_regex_pattern)
-    if r.Match([]byte(from)) || r.Match([]byte(to)) {
+    // Check against boring title expressions and discard matches
+    boring := regexp.MustCompile(boring_regex_pattern)
+    if boring.Match([]byte(from)) || boring.Match([]byte(to)) {
         return
     }
 
