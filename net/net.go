@@ -53,14 +53,14 @@ func (wr *WikiRace) RunRace(w http.ResponseWriter, r *http.Request) {
 
     startTime := time.Now()
     fmt.Printf("Remote request for %s -> %s...\n", from, to)
-    var requests []string
+    var links []string
     for _, page := range graph.Search(from, to) {
-        requests = append(requests, page)
+        links = append(links, page)
     }
     elapsed_time := time.Since(startTime)
     response := `<h1>WikiRacer `+Version+`</h1><br/>
                 <h2>From `+from+` to `+to+`:</h2>
-                <p>`+strings.Join(requests, ` &rarr; `)+`</p><br/>
+                <p>`+strings.Join(links, ` &rarr; `)+`</p><br/>
                 <small>Elapsed time: `+elapsed_time.String()+`</small>`
     respondWithHTML(w, http.StatusOK, response)
 }
@@ -77,7 +77,6 @@ func respondWithHTML(w http.ResponseWriter, code int, response string) {
 
 func respondWithJSON(w http.ResponseWriter, code int, payload interface{}) {
     response, _ := json.Marshal(payload)
-
     w.Header().Set("Content-Type", "application/json; charset=utf-8")
     w.WriteHeader(code)
     w.Write(response)

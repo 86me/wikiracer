@@ -27,7 +27,7 @@ var (
         IdleConnTimeout:    30 * time.Second,
         DisableCompression: true,
     }
-    client = &http.Client{ Transport: tr, Timeout: 15 * time.Second }
+    client = &http.Client{ Transport: tr, Timeout: 90 * time.Second }
 
     // Ignore uninteresting or "boring" term relationships
     boring_regex = []string {
@@ -43,15 +43,15 @@ var (
         "BIBSYS",
         "LIBRIS",
         "^OCLC$",
+        "[Aa]bout.com",
+        "[Ii][Mm][Dd][Bb]",
         "Wayback Machine",
         "National Diet Library",
         "Library of Congress Control Number",
         "Biblioteca Nacional de España",
         "Bibliothèque nationale de France",
     }
-
     boring_regex_pattern = `(` + strings.Join(boring_regex, "|") + `)`
-
 )
 
 type PageGraph struct {
