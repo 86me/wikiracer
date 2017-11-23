@@ -27,7 +27,7 @@ var (
         IdleConnTimeout:    30 * time.Second,
         DisableCompression: true,
     }
-    client = &http.Client{ Transport: tr, Timeout: 90 * time.Second }
+    client = &http.Client{ Transport: tr, Timeout: 30 * time.Second }
 
     // Ignore uninteresting or "boring" term relationships
     boring_regex = []string {
@@ -292,14 +292,6 @@ func (pl Links) add(from, to string) {
 // results have been fetched.
 func LinksFrom(titles []string) chan Links {
     return allLinks("pl", "links", titles)
-}
-
-// LinksFrom takes one or more Wikipedia page titles and returns a channel that
-// will receive one or more Links objects, each containing partial or full
-// mappings of linked page to source page. The channel will be closed after all
-// results have been fetched.
-func LinksHere(titles []string) chan Links {
-    return allLinks("lh", "linkshere", titles)
 }
 
 // allLinks batches API requests to fetch the maximum number of results allowed
