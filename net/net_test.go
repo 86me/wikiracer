@@ -45,7 +45,7 @@ func TestRunRace(t *testing.T) {
     wr = WikiRace{}
     wr.Initialize()
 
-    req, _ := http.NewRequest("GET", "/Ada Lovelace/Susan B. Anthony", nil)
+    req, _ := http.NewRequest("GET", "/The Beatles/Ada Lovelace", nil)
     response := executeRequest(req)
 
     checkResponseCode(t, http.StatusOK, response.Code)
@@ -59,8 +59,8 @@ func TestRunRace(t *testing.T) {
     re := regexp.MustCompile(`Elapsed time: [0-9].[0-9]*s`)
 
     expected := `<h1>WikiRacer 0.86</h1><br/>
-                <h2>From Ada Lovelace to Susan B. Anthony:</h2>
-                <p>Ada Lovelace &rarr; Artificial intelligence &rarr; Albert Einstein &rarr; Susan B. Anthony</p><br/>
+                <h2>From The Beatles to Ada Lovelace:</h2>
+                <p>The Beatles &rarr; Los Angeles Times &rarr; Ada Lovelace</p><br/>
                 <small></small>`
 
     response_regex := re.ReplaceAllString(response.Body.String(), "")

@@ -33,7 +33,7 @@ func usage() {
         fmt.Println("To serve WikiRacer on HTTP [address:port]")
         os.Exit(1)
     } else {
-        fmt.Fprintf(os.Stderr, "usage: %s [-debug] \"from_title\" \"to_title\"\n\n", os.Args[0])
+        fmt.Fprintf(os.Stderr, "usage: %s [-debug] [-serve] \"from_title\" \"to_title\"\n\n", os.Args[0])
         flag.PrintDefaults()
     }
 }
@@ -46,6 +46,7 @@ func init() {
         log.SetOutput(ioutil.Discard)
     }
 
+    // Start HTTP service
     if *serve {
         wr := net.WikiRace{}
         wr.Initialize()
@@ -57,10 +58,11 @@ func init() {
         }
     }
 
-
+    // Parse command line arguments
     fromTitle = flag.Arg(0)
     toTitle = flag.Arg(1)
 
+    // If empty print usage and exit
     if len(fromTitle) == 0 || len(toTitle) == 0 {
         usage()
         os.Exit(1)
@@ -70,8 +72,9 @@ func init() {
 
 func main() {
     startTime := time.Now()
-    graph := links.NewPageGraph()
 
+    // Run wiki race
+    graph := links.NewPageGraph()
     for _, page := range graph.Search(fromTitle, toTitle) {
         fmt.Println(page)
     }
