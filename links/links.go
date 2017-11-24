@@ -8,6 +8,7 @@ import (
     "net/url"
     "time"
     "strings"
+    "os"
     "log"
     "regexp"
     "sync"
@@ -95,7 +96,7 @@ func (m *safeStringMap) Set(key, value string) {
 
 // Takes starting and ending search terms and returns a path of links
 // from the starting page to the ending page.
-func (pg *PageGraph) Search(from, to string) []string {
+func (pg *PageGraph) Search(from string, to string) []string {
     midpoint := make(chan string)
 
     go func() {
@@ -120,13 +121,20 @@ func (pg *PageGraph) path(midpoint string) []string {
         ptr, _ = pg.forward.Get(ptr)
     }
 
+    // Swap path for backwards search
     for i := 0; i < len(path)/2; i++ {
         swap := len(path)-i-1
         path[i], path[swap] = path[swap], path[i]
     }
 
+    // If no links exist, fail gracefully
+    if len(path) == 0 {
+        fmt.Println("No results.")
+        os.Exit(1)
+    }
+
     // Pop midpoint of the stack (following loop re-adds it)
-    path = path[0 : len(path)-1]
+    path = path[0:len(path)-1]
 
     // Add path from midpoint to end
     ptr = midpoint
@@ -215,16 +223,22 @@ func (pg *PageGraph) checkBackward(from, to string) (done bool) {
     return done
 }
 
+// Prevent further searches
+func (pg *PageGraph) Stop() (done bool) {
+    log.Println("STOPPING FURTHER SEARCHES")
+    return done
+}
+
 // Returns the given slice as batches with a maximum size
-func batch(s []string, max int) [][]string {
+func batch(slice []string, max int) [][]string {
     batches := [][]string{}
     var start, end int
-    for start < len(s) {
+    for start < len(slice) {
         end = start + max
-        if end > len(s) {
-            end = len(s)
+        if end > len(slice) {
+            end = len(slice)
         }
-        batches = append(batches, s[start:end])
+        batches = append(batches, slice[start:end])
         start = end
     }
     return batches

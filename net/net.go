@@ -49,14 +49,19 @@ func (wr *WikiRace) RunRace(w http.ResponseWriter, r *http.Request) {
         return
     }
 
-    graph := links.NewPageGraph()
+    log.Printf("[%s] Remote request for %s -> %s", r.RemoteAddr, from, to)
+    fmt.Printf("Remote request for %s -> %s...\n", from, to)
 
     startTime := time.Now()
-    fmt.Printf("Remote request for %s -> %s...\n", from, to)
+    // Run remote wiki race request
+    graph := links.NewPageGraph()
     var links []string
     for _, page := range graph.Search(from, to) {
         links = append(links, page)
     }
+    // Path found. Stop further depth searches
+    graph.Stop()
+
     elapsed_time := time.Since(startTime)
     response := `<h1>WikiRacer `+Version+`</h1><br/>
                 <h2>From `+from+` to `+to+`:</h2>

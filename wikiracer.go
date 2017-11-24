@@ -2,6 +2,7 @@ package main
 
 import (
     "fmt"
+    "strings"
     "os"
     "flag"
     "log"
@@ -74,9 +75,12 @@ func main() {
 
     // Run wiki race
     graph := links.NewPageGraph()
+    var links[]string
     for _, page := range graph.Search(fromTitle, toTitle) {
-        fmt.Println(page)
+        links = append(links, page)
     }
+    fmt.Println(strings.Join(links, ` -> `))
+    graph.Stop()
 
     fmt.Println("Elapsed time: ", time.Since(startTime))
 }
