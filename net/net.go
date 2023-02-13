@@ -2,6 +2,8 @@ package net
 
 import (
     "fmt"
+    "io"
+    "os"
     "log"
     "strings"
     "time"
@@ -28,7 +30,7 @@ func (wr *WikiRace) Initialize() {
 }
 
 func (wr *WikiRace) Serve(addr string) {
-    fmt.Println("[WikiRacer] service running at ", addr)
+    fmt.Println("[WikiRacer] service running at", addr)
     log.Fatal(http.ListenAndServe(addr, wr.Router))
 }
 
@@ -36,8 +38,12 @@ func (wr *WikiRace) GetHelp(w http.ResponseWriter, r *http.Request) {
     type Help struct {
         Body string
     }
-    response := Help{Body: "Example usage: /Ada Lovelace/Susan B. Anthony"}
-    respondWithJSON(w, http.StatusOK, response)
+    //responseJSON := Help{Body: "Example usage: /Ada Lovelace/Susan B. Anthony"}
+    //respondWithJSON(w, http.StatusOK, responseJSON)
+    responseHTML := `<h1>WikiRacer `+Version+`</h1><br/>
+                <h2>Example usage:</h2>
+                <p>http://localhost:8686/Ada Lovelace/Susan B. Anthony</p><br/>`
+    respondWithHTML(w, http.StatusOK, responseHTML)
 }
 
 func (wr *WikiRace) RunRace(w http.ResponseWriter, r *http.Request) {
@@ -49,8 +55,8 @@ func (wr *WikiRace) RunRace(w http.ResponseWriter, r *http.Request) {
         return
     }
 
-    log.Printf("[%s] Remote request for %s -> %s", r.RemoteAddr, from, to)
-    fmt.Printf("Remote request for %s -> %s...\n", from, to)
+    s := fmt.Sprintf("[%s] Remote request for %s -> %s\n", r.RemoteAddr, from, to)
+    io.WriteString(os.Stdout, s)
 
     startTime := time.Now()
     // Run remote wiki race request
@@ -63,11 +69,11 @@ func (wr *WikiRace) RunRace(w http.ResponseWriter, r *http.Request) {
     graph.Stop()
 
     elapsed_time := time.Since(startTime)
-    response := `<h1>WikiRacer `+Version+`</h1><br/>
+    responseHTML := `<h1>WikiRacer `+Version+`</h1><br/>
                 <h2>From `+from+` to `+to+`:</h2>
                 <p>`+strings.Join(links, ` &rarr; `)+`</p><br/>
                 <small>Elapsed time: `+elapsed_time.String()+`</small>`
-    respondWithHTML(w, http.StatusOK, response)
+    respondWithHTML(w, http.StatusOK, responseHTML)
 }
 
 func respondWithError(w http.ResponseWriter, code int, message string) {

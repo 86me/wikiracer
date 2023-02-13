@@ -43,7 +43,9 @@ func init() {
     flag.Parse()
 
     if !*debug {
-        log.SetOutput(ioutil.Discard)
+      log.SetOutput(ioutil.Discard)
+    } else {
+      log.SetOutput(os.Stdout)
     }
 
     // Start HTTP service
@@ -73,7 +75,7 @@ func init() {
 func main() {
     startTime := time.Now()
 
-    // Run wiki race
+    // Run wikirace
     graph := links.NewPageGraph()
     var links[]string
     for _, page := range graph.Search(fromTitle, toTitle) {
