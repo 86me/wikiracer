@@ -7,8 +7,8 @@ import (
     "flag"
     "log"
     "io/ioutil"
-    "wikiracer/net"
-    "wikiracer/links"
+    "github.com/86me/wikiracer/net"
+    "github.com/86me/wikiracer/links"
     "time"
 )
 

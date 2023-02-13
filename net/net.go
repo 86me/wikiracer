@@ -6,7 +6,7 @@ import (
     "strings"
     "time"
     "encoding/json"
-    "wikiracer/links"
+    "github.com/86me/wikiracer/links"
     "net/http"
     "github.com/gorilla/mux"
 )
